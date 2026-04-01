@@ -8,6 +8,8 @@ namespace Geometry
 
         public Vector2[] Vertices => new Vector2[0];
 
+        public Extent Size => new Extent(Radius * 2, Radius * 2);
+
         public CircleShape2D(float radius)
         {
             Radius = radius;
@@ -15,31 +17,28 @@ namespace Geometry
 
         public bool Intersect(IShape2D otherShape, Vector2 thisPosition, Vector2 otherPosition)
         {
-            if (otherShape is CircleShape2D)
+            switch (otherShape)
             {
-                var otherCircle = (CircleShape2D)otherShape;
-                return CircleIntersect(thisPosition, this, otherPosition, otherCircle);
-            }
+                case CircleShape2D otherCircle:
+                    return CheckCircleIntersection(thisPosition, this, otherPosition, otherCircle);
 
-            if (otherShape is RectangleShape2D)
-            {
-                var otherRect = (RectangleShape2D)otherShape;
-                return RectangleIntersectWithCircle(thisPosition, this, otherPosition, otherRect);
-            }
+                case RectangleShape2D otherRectangle:
+                    return CheckRectangleIntersectionWithCircle(thisPosition, this, otherPosition, otherRectangle);
 
-            return false;
+                default:
+                    return false;
+            }
         }
 
-        private bool CircleIntersect(Vector2 pos1, CircleShape2D circle1, Vector2 pos2, CircleShape2D circle2)
+        private bool CheckCircleIntersection(Vector2 circle1Position, CircleShape2D circle1, Vector2 circle2Position, CircleShape2D circle2)
         {
-            float distance = Vector2.Distance(pos1, pos2);
-
+            float distance = Vector2.Distance(circle1Position, circle2Position);
             return distance <= (circle1.Radius + circle2.Radius);
         }
 
-        private bool RectangleIntersectWithCircle(Vector2 circlePos, CircleShape2D circle, Vector2 rectPos, RectangleShape2D rect)
+        private bool CheckRectangleIntersectionWithCircle(Vector2 circlePosition, CircleShape2D circle, Vector2 rectPosition, RectangleShape2D rectangle)
         {
-            return rect.RectangleIntersectWithCircle(rectPos, rect, circlePos, circle);
+            return ShapeTools.RectangleIntersectWithCircle(rectPosition, rectangle, circlePosition, circle);
         }
     }
 }

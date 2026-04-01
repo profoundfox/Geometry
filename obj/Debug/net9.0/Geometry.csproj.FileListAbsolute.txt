@@ -31,3 +31,4 @@
 /Users/nilslauvstad/Git/Geometry/obj/Debug/net9.0/Geometry.pdb
 /Users/nilslauvstad/Git/Geometry/obj/Debug/net9.0/Geometry.genruntimeconfig.cache
 /Users/nilslauvstad/Git/Geometry/obj/Debug/net9.0/ref/Geometry.dll
+/Users/nilslauvstad/Git/Geometry/obj/Debug/net9.0/Geometry.sourcelink.json

@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Linq;
 
@@ -19,5 +20,6 @@ namespace Geometry
         {
             return Shape.Intersect(other.Shape, this.Position, other.Position);
         }
+
     }
 }

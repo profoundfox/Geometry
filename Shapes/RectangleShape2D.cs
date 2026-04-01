@@ -8,38 +8,45 @@ namespace Geometry
         public float Width { get; set; }
         public float Height { get; set; }
 
+        private Vector2[] _vertices;
+
         public Vector2[] Vertices
         {
             get
             {
-                return new Vector2[]
+                if (_vertices == null)
                 {
-                    new Vector2(0, 0),                     
-                    new Vector2(Width, 0),                 
-                    new Vector2(Width, Height),
-                    new Vector2(0, Height)
-                };
+                    _vertices = new Vector2[]
+                    {
+                        new Vector2(0, 0),
+                        new Vector2(Width, 0),
+                        new Vector2(Width, Height),
+                        new Vector2(0, Height)
+                    };
+                }
+                return _vertices;
             }
         }
+
+        public Extent Size => new Extent(Width, Height);
 
         public RectangleShape2D(float width, float height)
         {
             Width = width;
             Height = height;
+            _vertices = null;
         }
 
         public bool Intersect(IShape2D otherShape, Vector2 thisPosition, Vector2 otherPosition)
         {
-            if (otherShape is RectangleShape2D)
+            if (otherShape is RectangleShape2D otherRect)
             {
-                var otherRect = (RectangleShape2D)otherShape;
                 return AABBIntersect(thisPosition, this, otherPosition, otherRect);
             }
 
-            if (otherShape is CircleShape2D)
+            if (otherShape is CircleShape2D otherCircle)
             {
-                var otherCircle = (CircleShape2D)otherShape;
-                return RectangleIntersectWithCircle(thisPosition, this, otherPosition, otherCircle);
+                return ShapeTools.RectangleIntersectWithCircle(thisPosition, this, otherPosition, otherCircle);
             }
 
             return false;
@@ -55,18 +62,6 @@ namespace Geometry
 
             return (min1.X <= max2.X && max1.X >= min2.X &&
                     min1.Y <= max2.Y && max1.Y >= min2.Y);
-        }
-
-        public bool RectangleIntersectWithCircle(Vector2 rectPos, RectangleShape2D rect, Vector2 circlePos, CircleShape2D circle)
-        {
-            float closestX = Math.Clamp(circlePos.X, rectPos.X, rectPos.X + rect.Width);
-            float closestY = Math.Clamp(circlePos.Y, rectPos.Y, rectPos.Y + rect.Height);
-
-            float distanceX = circlePos.X - closestX;
-            float distanceY = circlePos.Y - closestY;
-            float distanceSquared = distanceX * distanceX + distanceY * distanceY;
-
-            return distanceSquared <= circle.Radius * circle.Radius;
         }
     }
 }
